@@ -1,17 +1,20 @@
 using Gadgeteer;
 using Gadgeteer.Modules;
 using Gadgeteer.SocketInterfaces;
-using Microsoft.SPOT;
 
 namespace GarageDoor
 {
     public class GarageDoorButton : Module
     {
+        public delegate void ButtonClicked(GarageDoorButton button);
+
+        public event ButtonClicked Click = (b) => { };
+
         Socket _socket;
         DigitalOutput _output;
 
 
-        public event EventHandler Clicked = (s, e) => { };
+        
         
         public GarageDoorButton(int socketNumber)
         {
@@ -22,12 +25,15 @@ namespace GarageDoor
             var input = InterruptInputFactory.Create(_socket, Socket.Pin.Three, GlitchFilterMode.On, ResistorMode.PullUp, InterruptMode.RisingAndFallingEdge, this);
             input.Interrupt += Input_Interrupt;
 
+            
             _output = DigitalOutputFactory.Create(_socket, Socket.Pin.Four, true, this);
         }
 
+        
+
         void Input_Interrupt(InterruptInput sender, bool value)
         {
-            if (value == true) Clicked(this, new EventArgs());
+            if (value == true ) Click(this);
         }
     }
 }
