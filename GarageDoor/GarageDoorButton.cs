@@ -26,7 +26,7 @@ namespace GarageDoor
             input.Interrupt += Input_Interrupt;
 
             
-            _output = DigitalOutputFactory.Create(_socket, Socket.Pin.Four, true, this);
+            //_output = DigitalOutputFactory.Create(_socket, Socket.Pin.Four, true, this);
         }
 
         

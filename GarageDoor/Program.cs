@@ -8,6 +8,7 @@ namespace GarageDoor
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
         {
+            relayX1.TurnOn();
             var garageDoorButton = new GarageDoorButton(3);
             garageDoorButton.Click += (s) => ToggleGarageDoor();
             rfidReader.IdReceived += RfidReaderIdReceived;
@@ -36,13 +37,15 @@ namespace GarageDoor
         {
             Print("Opening/closing...");
             DelayPrint(2000, "Waiting...");
-            relayX1.TurnOn();
-            var timer = new Timer(20);
+
+            relayX1.TurnOff();
+            var timer = new Timer(500);
             timer.Tick += (t) =>
             {
-                relayX1.TurnOff();
+                relayX1.TurnOn();
                 t.Stop();
                 timer = null;
+                Reboot();
             };
             timer.Start();
         }
